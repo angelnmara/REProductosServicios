@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1096383027831",
+    "firebase_url": "https://productosservicios-235c7.firebaseio.com",
+    "project_id": "productosservicios-235c7",
+    "storage_bucket": "productosservicios-235c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096383027831:android:9670314ff2af26dafb8472",
+        "android_client_info": {
+          "package_name": "com.lamarrulla.reproductosservicios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096383027831-ea5ijbm5fvuiie8ltoveiek6ig0q8c4f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lamarrulla.reproductosservicios",
+            "certificate_hash": "be63c8c173fff108b809efa0bc14acf3309be120"
+          }
+        },
+        {
+          "client_id": "1096383027831-uibu7f8hdn9pfqootse21pg1u3bdu6ct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdTK2rivaVczQvp9HPdpwJpw6jauAw7gQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096383027831-uibu7f8hdn9pfqootse21pg1u3bdu6ct.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1096383027831-apk1ortoleqou9pp0pttr4knnipkfgs3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lamarrulla.reproductosservicios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
