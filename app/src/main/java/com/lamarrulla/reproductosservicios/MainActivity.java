@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -17,27 +18,29 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.lamarrulla.reproductosservicios.Facebook.FirebaseFacebook;
-import com.lamarrulla.reproductosservicios.Google.FirebaseGoogle;
+import com.lamarrulla.reproductosservicios.entity.User;
+import com.lamarrulla.reproductosservicios.facebook.FirebaseFacebook;
+import com.lamarrulla.reproductosservicios.google.FirebaseGoogle;
+import com.lamarrulla.reproductosservicios.utils.UtilsActivity;
+import com.lamarrulla.reproductosservicios.viewModel.UserViewModel;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,10 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final String TAG = this.getClass().getSimpleName();
     private final int RC_SIGN_IN = 101;
     private FirebaseAuth mAuth;
+    //private UserViewModel userViewModel;
     Context context;
     FirebaseFacebook firebaseFacebook;
     FirebaseGoogle firebaseGoogle;
     GoogleSignInClient mGoogleSignInClient;
+    UtilsActivity utilsActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +61,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         context = this;
 
+        /*userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(List<User> users) {
+                Toast.makeText(context, "user view model", Toast.LENGTH_LONG).show();
+            }
+        });*/
+
         //Se inicializa firebase
         FirebaseApp.initializeApp(context);
         mAuth = FirebaseAuth.getInstance();
 
         // se valida si ya esta firmado el usuario para ver a donde mandarlo
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser!=null){
+            utilsActivity = new UtilsActivity();
+            utilsActivity.setContext(context);
+            utilsActivity.CallPSActivity();
+        }
         //updateUI(currentUser);
 
         // Inicializacion de facebook
@@ -76,12 +94,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                //AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                AccessToken accessToken = AccessToken.getCurrentAccessToken();
                 //boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
                 firebaseFacebook = new FirebaseFacebook();
                 firebaseFacebook.setmAuth(mAuth);
                 firebaseFacebook.setContext(context);
-                firebaseFacebook.setToken(loginResult.getAccessToken());
+                firebaseFacebook.setToken(accessToken);
                 firebaseFacebook.handleFacebookAccessToken();
             }
 

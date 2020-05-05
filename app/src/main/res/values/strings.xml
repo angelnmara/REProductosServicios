@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">REProductosServicios</string>
+    <string name="app_name">Productos y Servicios</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -11,6 +11,21 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="facebook_app_id">223988442359667</string>
     <string name="fb_login_protocol_scheme">fb223988442359667</string>
-    <string name="ErrorActivitiResult">No existe una activiti result para responder</string>
     <!--<string name="default_web_client_id">1096383027831-8tlrdb1800ls817q5drm545s7qg3hbet.apps.googleusercontent.com</string>-->
+    <string name="ErrorActivitiResult">No existe una activiti result para responder</string>
+    <string name="title_activity_productos_servicios">ProductosServiciosActivity</string>
+    <string name="tab_text_1">Encuentra</string>
+    <string name="tab_text_2">Ofrece</string>
+    <string name="title_activity_p_s">PSActivity</string>
+    <string name="title_activity_principal">MainActivity</string>
+    <string name="title_home">Comprar</string>
+    <string name="title_dashboard">Vender</string>
+    <string name="title_notifications">Configuración</string>
+    <string name="producto_o_servicio">Producto o servicio</string>
+    <string name="nombre">Nombre</string>
+    <string name="telefono">Teléfono</string>
+    <string name="direccion">Dirección</string>
+    <string name="envio_a_domicilio">Envío a domicilio</string>
+    <string name="correo_electronico">Correo electrónico</string>
+
 </resources>
