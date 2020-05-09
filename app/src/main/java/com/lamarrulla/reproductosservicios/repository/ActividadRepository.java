@@ -30,7 +30,7 @@ public class ActividadRepository {
     public void delete(Actividad actividad){
         new DeleteActividadAsyncTask(actividadDao).execute(actividad);
     }
-    public void deleteAllUsers(){
+    public void deleteAllActividades(){
         new DeleteAllActividadesAsyncTask(actividadDao).execute();
     }
     public LiveData<List<Actividad>> getAllActividades(){

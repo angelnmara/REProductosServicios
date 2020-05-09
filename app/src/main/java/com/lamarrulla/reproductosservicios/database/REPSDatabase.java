@@ -14,7 +14,7 @@ import com.lamarrulla.reproductosservicios.dao.UserDao;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
 import com.lamarrulla.reproductosservicios.entity.User;
 
-@Database(entities = {User.class, Actividad.class}, version = 2)
+@Database(entities = {User.class, Actividad.class}, version = 1)
 public abstract class REPSDatabase extends RoomDatabase {
     private static REPSDatabase instance;
     public abstract UserDao userDao();
@@ -52,8 +52,8 @@ public abstract class REPSDatabase extends RoomDatabase {
             userDao.insert(new User("angel rincon", "ar@gmail.com", "55555555", "sierra dorada", "https://graph.facebook.com/3123179174379593/picture"));
             userDao.insert(new User("andres rincon", "andr@gmail.com", "55555555", "sierra dorada", "https://graph.facebook.com/3123179174379593/picture"));
 
-            actividadDao.insert(new Actividad("Venta", true));
-            actividadDao.insert(new Actividad("Servicio", true));
+            actividadDao.insert(new Actividad("Vendo", true));
+            actividadDao.insert(new Actividad("Ofresco un servício", true));
             return null;
         }
     }

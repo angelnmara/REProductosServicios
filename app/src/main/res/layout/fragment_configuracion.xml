@@ -19,7 +19,7 @@
             android:layout_height="80dp"
             bind:avatar="@{user.avatar}"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp">
+            android:layout_marginBottom="40dp">
         </ImageView>
 
         <com.google.android.material.textfield.TextInputLayout

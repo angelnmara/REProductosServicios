@@ -1,10 +1,17 @@
 package com.lamarrulla.reproductosservicios.entity;
 
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.lamarrulla.reproductosservicios.interfaces.MustVisitItemListener;
+
 @Entity(tableName = "actividad_table")
 public class Actividad {
+
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String actividadTipo;
@@ -30,4 +37,5 @@ public class Actividad {
     public boolean isActividadStatus() {
         return actividadStatus;
     }
+
 }

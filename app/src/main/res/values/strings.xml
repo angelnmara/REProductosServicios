@@ -21,11 +21,19 @@
     <string name="title_home">Comprar</string>
     <string name="title_dashboard">Vender</string>
     <string name="title_notifications">Configuración</string>
-    <string name="producto_o_servicio">Producto o servicio</string>
+    <string name="producto_o_servicio">Que hago?</string>
+    <string name="tipoVentas">Que tipo de ventas tengo?</string>
     <string name="nombre">Nombre</string>
     <string name="telefono">Teléfono</string>
     <string name="direccion">Dirección</string>
     <string name="envio_a_domicilio">Envío a domicilio</string>
     <string name="correo_electronico">Correo electrónico</string>
+
+
+    /**/
+    <array name="TipoNegocio">
+        <item>Negocio</item>
+        <item>Personal</item>
+    </array>
 
 </resources>

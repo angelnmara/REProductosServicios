@@ -30,6 +30,7 @@ public class ConfiguracionFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         final FragmentConfiguracionBindingImpl binding = DataBindingUtil.inflate(inflater, R.layout.fragment_configuracion, container, false);
         View view = binding.getRoot();
 
