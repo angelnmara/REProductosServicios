@@ -1,10 +1,15 @@
 package com.lamarrulla.reproductosservicios.dataBinding;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ActionMenuView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,24 +20,46 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
+import com.lamarrulla.reproductosservicios.R;
+import com.lamarrulla.reproductosservicios.entity.Actividad;
+import com.lamarrulla.reproductosservicios.viewModel.ActividadViewModel;
+
+import org.w3c.dom.Text;
+
+import java.util.List;
 
 public class VenderDataBinding {
 
     static Context context;
+    static ActividadViewModel actividadViewModel;
+    //static AutoCompleteTextView autoCompleteTextViewG;
+    //static AutoCompleteTextView autoCompleteTextViewTVG;
+    static TextInputLayout textInputLayoutTVG;
+    static TextInputLayout textInputLayoutTipoNegocio;
 
     public VenderDataBinding(Context context) {
         this.context = context;
+        cargadatos();
     }
 
     private static Boolean ft;
-    private String tituloSpinner;
-    static TextView textViewG;
+//    static TextView textViewG;
 
-    private static int visibleSpinner;
-    private static String visibleSpinnerStr;
     private String text;
+    public String value;
+    public Boolean mostrarTV;
+
+    static String[] tipoNegocio;
+    static String[] ddlCargando;
+
+    static ArrayAdapter<String> adapter;
 
     public String getText() {
         return text;
@@ -46,29 +73,116 @@ public class VenderDataBinding {
         VenderDataBinding.ft = ft;
     }
 
-    public static int getVisibleSpinner() {
-        return visibleSpinner;
+    public void setMostrarTV(Boolean mostrarTV) {
+        this.mostrarTV = mostrarTV;
     }
 
-    public static void setVisibleSpinner(int visibleSpinner) {
-        VenderDataBinding.visibleSpinner = visibleSpinner;
+    @BindingAdapter("android:textInputTV")
+    public static void textInputTV(TextInputLayout textInputLayout, Boolean mostrarTV){
+        textInputLayoutTVG = textInputLayout;
+        textInputLayout.setVisibility(View.GONE);
     }
 
-    public static String getVisibleSpinnerStr() {
-        return visibleSpinnerStr;
+    private static void cargadatos() {
+        // carga ddl cargando
+        ddlCargando = context.getResources().getStringArray(R.array.ddlCargando);
+
+        // carga datos ddl tipo negocio
+        tipoNegocio = context.getResources().getStringArray(R.array.TipoNegocio);
     }
 
-    public static void setVisibleSpinnerStr(String visibleSpinnerStr) {
-        VenderDataBinding.visibleSpinnerStr = visibleSpinnerStr;
+    @BindingAdapter(value = {"android:autoCompleteDR"}, requireAll = false)
+    public static void autoCompleteBinding(final AutoCompleteTextView autoCompleteTextView, Boolean mostrarTV){
+        cargadatosDDLQC(autoCompleteTextView);
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Boolean mostrarTV = false;
+                switch (((MaterialTextView) view).getText().toString()){
+                    case "Vendo":
+                        textInputLayoutTVG.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoNegocio.setVisibility(View.GONE);
+                        break;
+                    case "Ofresco un servício":
+                        textInputLayoutTVG.setVisibility(View.GONE);
+                        textInputLayoutTipoNegocio.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoNegocio.setHint("Que servicio ofresco?");
+                        break;
+                    default:
+                        textInputLayoutTVG.setVisibility(View.GONE);
+                        textInputLayoutTipoNegocio.setVisibility(View.GONE);
+                        break;
+                }
+            }
+        });
     }
 
-    @BindingAdapter("android:Titulo")
+    private static void cargadatosDDLQC(final AutoCompleteTextView autoCompleteTextView) {
+        // carga datos que hago?
+        //autoCompleteTextViewG.setAdapter(adapter);
+        adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, ddlCargando);
+        autoCompleteTextView.setAdapter(adapter);
+        actividadViewModel = ViewModelProviders.of((FragmentActivity) context).get(ActividadViewModel.class);
+        actividadViewModel.getAll().observe((LifecycleOwner) context, new Observer<List<Actividad>>() {
+            @Override
+            public void onChanged(List<Actividad> actividads) {
+                int size = actividads.size();
+                if(size>0){
+                    String[] tiposActividades = new String[size];
+                    int i = 0;
+                    for (Actividad act: actividads
+                    ) {
+                        tiposActividades[i] = act.getActividadTipo();
+                        i++;
+                    }
+                    adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, tiposActividades);
+                    autoCompleteTextView.setAdapter(adapter);
+                }
+            }
+        });
+    }
+
+    @BindingAdapter("android:autoCompleteTV")
+    public static void bindingAutoCompleteTV(final AutoCompleteTextView autoCompleteTextViewTV, String text){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, tipoNegocio);
+        autoCompleteTextViewTV.setAdapter(adapter);
+        autoCompleteTextViewTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (((MaterialTextView) view).getText().toString()){
+                    case "Negocio":
+                        //Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
+                        textInputLayoutTipoNegocio.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoNegocio.setHint("Que tipo de negocio?");
+                        break;
+                    case "Personal":
+                        textInputLayoutTipoNegocio.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoNegocio.setHint("Que vendo?");
+                        break;
+                    default:
+                        Toast.makeText(context, "Default", Toast.LENGTH_SHORT).show();
+                        textInputLayoutTipoNegocio.setVisibility(View.GONE);
+                        break;
+                }
+            }
+        });
+    }
+
+    @BindingAdapter("android:textInputEditTipoNegocio")
+    public static void bindingTextInputEditTipoNegocio(TextInputLayout textInputLayout, Boolean mostrarTV){
+        textInputLayoutTipoNegocio = textInputLayout;
+        textInputLayout.setVisibility(View.GONE);
+    }
+
+    /*@BindingAdapter("android:Titulo")
     public static void cambiaTitulo(TextView  textView, String text){
-        textViewG = textView;
+        //textViewG = textView;
         textView.setText(text);
-    }
+    }*/
 
-    @BindingAdapter(value = {"selectedValue", "selectedValueAttrChanged"}, requireAll = false)
+
+
+    /*@BindingAdapter(value = {"selectedValue", "selectedValueAttrChanged"}, requireAll = false)
     public static void bindSpinnerData(AppCompatSpinner pAppCompatSpinner, String newSelectedValue, final InverseBindingListener newTextAttrChanged) {
         pAppCompatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -86,9 +200,22 @@ public class VenderDataBinding {
     }
     @InverseBindingAdapter(attribute = "selectedValue", event = "selectedValueAttrChanged")
     public static String captureSelectedValue(AppCompatSpinner pAppCompatSpinner) {
-        textViewG.setText((String) pAppCompatSpinner.getSelectedItem());
         return (String) pAppCompatSpinner.getSelectedItem();
+    }*/
+
+    /*@BindingAdapter("android:text")
+    public static void bindTextVal(EditText editText, String val){
+        editText.setText(val);
     }
+
+        @InverseBindingAdapter(attribute = "android:text")
+    public static String getStringFromBinding(EditText editText){
+        String value = editText.getText().toString();
+        value = "Hola mundo " + value;
+        Log.d("bindingInverse", value);
+        //textViewG.setText(value);
+        return value;
+    }*/
 
     /*@BindingAdapter("android:ddlActividades")
     public static void spinneRemoveTitulo(final Spinner spinner, final String tituloSpinner){

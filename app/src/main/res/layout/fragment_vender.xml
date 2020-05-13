@@ -4,6 +4,7 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="actividad"
             type="com.lamarrulla.reproductosservicios.entity.Actividad" />
@@ -16,9 +17,9 @@
             name="handler"
             type="com.lamarrulla.reproductosservicios.interfaces.MustVisitItemListener"></variable>
 
-        <variable
+        <!--<variable
             name="tiposActividades"
-            type="String[]" />
+            type="String[]" />-->
 
     </data>
 
@@ -28,16 +29,54 @@
         android:orientation="vertical"
         android:layout_marginTop="90dp">
 
-        <androidx.appcompat.widget.AppCompatSpinner
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/producto_o_servicio"
+                android:autoCompleteDR="@{false}"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textInputTV="@{false}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tipoVentas"
+                android:autoCompleteTV="@{vender.text}"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textInputEditTipoNegocio="@{false}">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Que tipo de negocio tengo?">
+            </EditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--<androidx.appcompat.widget.AppCompatSpinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:spinnerMode="dialog"
             android:prompt="@string/producto_o_servicio"
             android:entries="@{tiposActividades}"
-            bind:selectedValue="@={vender.text}">
-        </androidx.appcompat.widget.AppCompatSpinner>
+            android:selectedValueQ="@{vender.text}">
+        </androidx.appcompat.widget.AppCompatSpinner>-->
 
-        <TextView
+        <!--<TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:Titulo="@{@string/tipoVentas}">
@@ -73,6 +112,12 @@
             android:onClick="@{()->handler.onSaveClick()}">
         </Button>
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={vender.value}">
+        </EditText>-->
+
     </LinearLayout>
 
 </layout>
@@ -81,3 +126,6 @@
                 android:spinnerQueHago="@{@string/producto_o_servicio}"-->
 
     <!--android:spinneRemoveTitulo="@{@string/tipoVentas}"-->
+
+
+    <!--android:selectedValueQ="@{vender.text}"-->

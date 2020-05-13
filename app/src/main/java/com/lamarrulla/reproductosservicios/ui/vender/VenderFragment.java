@@ -43,7 +43,7 @@ public class VenderFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
 
-    //SpinnerBindingUtil spinnerBindingUtil;
+    SpinnerBindingUtil spinnerBindingUtil;
     VenderDataBinding venderDataBinding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -52,17 +52,18 @@ public class VenderFragment extends Fragment {
         //View root = inflater.inflate(R.layout.fragment_vender, container, false);
 
         /*spinnerBindingUtil = new SpinnerBindingUtil(getContext());
-        spinnerBindingUtil.setFirstTime(true);*/
+        spinnerBindingUtil.setFt(true);*/
 
         venderDataBinding = new VenderDataBinding(getContext());
-        venderDataBinding.setFt(true);
+
+        //venderDataBinding.setFt(true);
 
         final FragmentVenderBindingImpl binding = DataBindingUtil.inflate(inflater, R.layout.fragment_vender, container, false);
         View view = binding.getRoot();
 
 
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-        actividadViewModel = ViewModelProviders.of(this).get(ActividadViewModel.class);
+        /*actividadViewModel = ViewModelProviders.of(this).get(ActividadViewModel.class);
 
         actividadViewModel.getAll().observe(this, new Observer<List<Actividad>>() {
             @Override
@@ -79,7 +80,7 @@ public class VenderFragment extends Fragment {
                     binding.setTiposActividades(tiposActividades);
                 }
             }
-        });
+        });*/
 
         mItemListener = new MustVisitItemListener() {
             @Override

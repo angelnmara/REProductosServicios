@@ -36,4 +36,8 @@
         <item>Personal</item>
     </array>
 
+    <array name="ddlCargando">
+        <item>Cargando ...</item>
+    </array>
+
 </resources>
