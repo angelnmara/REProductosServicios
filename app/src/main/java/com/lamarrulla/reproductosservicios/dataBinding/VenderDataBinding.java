@@ -29,16 +29,27 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 import com.lamarrulla.reproductosservicios.R;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
+import com.lamarrulla.reproductosservicios.entity.TipoNegocio;
+import com.lamarrulla.reproductosservicios.entity.TipoVenta;
 import com.lamarrulla.reproductosservicios.viewModel.ActividadViewModel;
+import com.lamarrulla.reproductosservicios.viewModel.TipoNegocioViewModel;
+import com.lamarrulla.reproductosservicios.viewModel.TipoVentaViewModel;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VenderDataBinding {
 
     static Context context;
     static ActividadViewModel actividadViewModel;
+    static TipoNegocioViewModel tipoNegocioViewModel;
+    static TipoVentaViewModel tipoVentaViewModel;
+
     //static AutoCompleteTextView autoCompleteTextViewG;
     //static AutoCompleteTextView autoCompleteTextViewTVG;
     static TextInputLayout textInputLayoutTVG;
@@ -58,6 +69,7 @@ public class VenderDataBinding {
 
     static String[] tipoNegocio;
     static String[] ddlCargando;
+    static String[] ddlTipoNegocio;
 
     static ArrayAdapter<String> adapter;
 
@@ -117,8 +129,57 @@ public class VenderDataBinding {
         });
     }
 
+    //carga tipos negocio
+    private static void cargaDatosTipoNegocio(final AutoCompleteTextView autoCompleteTextView){
+        tipoNegocioViewModel = ViewModelProviders.of((FragmentActivity) context).get(TipoNegocioViewModel.class);
+        tipoNegocioViewModel.getAll().observe((LifecycleOwner) context, new Observer<List<TipoNegocio>>() {
+            @Override
+            public void onChanged(List<TipoNegocio> tipoNegocios) {
+                autoCompleteTextView.setAdapter(regresaAdaptador(new ArrayList<Object>(tipoNegocios)));
+            }
+        });
+    }
+
+    //carga tipo venta
+    private static void cargaDatosTipoVenta(final AutoCompleteTextView autoCompleteTextView){
+        //adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, ddlTipoNegocio);
+        //autoCompleteTextView.setAdapter(adapter);
+        tipoVentaViewModel = ViewModelProviders.of((FragmentActivity) context).get(TipoVentaViewModel.class);
+        tipoVentaViewModel.getAll().observe((LifecycleOwner) context, new Observer<List<TipoVenta>>() {
+            @Override
+            public void onChanged(List<TipoVenta> tipoVentas) {
+                autoCompleteTextView.setAdapter(regresaAdaptador(new ArrayList<Object>(tipoVentas)));
+            }
+        });
+    }
+
+    //Adaptador generico
+    private static ArrayAdapter<String> regresaAdaptador(List<Object> arregloString){
+        int size = arregloString.size();
+        if(size>0){
+            String[] tipos = new String[size];
+            int i = 0;
+            while(size>i){
+                try {
+                    Object o = arregloString.get(i);
+                    Class<?> clazz = o.getClass();
+                    //Field[] campos = clazz.getDeclaredFields();
+                    Method method = clazz.getDeclaredMethods()[1];
+                    tipos[i] = method.invoke(o).toString();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                i++;
+            }
+            adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, tipos);
+        }
+        return adapter;
+    }
+
+    // carga datos que hago?
     private static void cargadatosDDLQC(final AutoCompleteTextView autoCompleteTextView) {
-        // carga datos que hago?
         //autoCompleteTextViewG.setAdapter(adapter);
         adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, ddlCargando);
         autoCompleteTextView.setAdapter(adapter);
@@ -144,8 +205,9 @@ public class VenderDataBinding {
 
     @BindingAdapter("android:autoCompleteTV")
     public static void bindingAutoCompleteTV(final AutoCompleteTextView autoCompleteTextViewTV, String text){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, tipoNegocio);
-        autoCompleteTextViewTV.setAdapter(adapter);
+        cargaDatosTipoVenta(autoCompleteTextViewTV);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, tipoNegocio);
+        //autoCompleteTextViewTV.setAdapter(adapter);
         autoCompleteTextViewTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

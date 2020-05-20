@@ -43,7 +43,7 @@ public class VenderFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
 
-    SpinnerBindingUtil spinnerBindingUtil;
+    //SpinnerBindingUtil spinnerBindingUtil;
     VenderDataBinding venderDataBinding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,

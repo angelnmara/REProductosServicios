@@ -12,19 +12,22 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.lamarrulla.reproductosservicios.dao.ActividadDao;
 import com.lamarrulla.reproductosservicios.dao.TipoServicioDao;
 import com.lamarrulla.reproductosservicios.dao.TipoNegocioDao;
+import com.lamarrulla.reproductosservicios.dao.TipoVentaDao;
 import com.lamarrulla.reproductosservicios.dao.UserDao;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
 import com.lamarrulla.reproductosservicios.entity.TipoNegocio;
 import com.lamarrulla.reproductosservicios.entity.TipoServicio;
+import com.lamarrulla.reproductosservicios.entity.TipoVenta;
 import com.lamarrulla.reproductosservicios.entity.User;
 
-@Database(entities = {User.class, Actividad.class, TipoServicio.class, TipoNegocio.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, Actividad.class, TipoServicio.class, TipoNegocio.class, TipoVenta.class}, version = 3, exportSchema = false)
 public abstract class REPSDatabase extends RoomDatabase {
     private static REPSDatabase instance;
     public abstract UserDao userDao();
     public abstract ActividadDao actividadDao();
     public abstract TipoServicioDao tipoServicioDao();
     public abstract TipoNegocioDao tipoNegocioDao();
+    public abstract TipoVentaDao tipoVentaDao();
 
     public static synchronized REPSDatabase getInstance(Context context){
         if(instance==null){
@@ -49,12 +52,14 @@ public abstract class REPSDatabase extends RoomDatabase {
         private ActividadDao actividadDao;
         private TipoServicioDao tipoServicioDao;
         private TipoNegocioDao tipoNegocioDao;
+        private TipoVentaDao tipoVentaDao;
 
         private PopulateDbAsyncTask(REPSDatabase db){
             actividadDao = db.actividadDao();
             userDao = db.userDao();
             tipoServicioDao = db.tipoServicioDao();
             tipoNegocioDao = db.tipoNegocioDao();
+            tipoVentaDao = db.tipoVentaDao();
         }
 
         @Override
@@ -65,6 +70,9 @@ public abstract class REPSDatabase extends RoomDatabase {
 
             actividadDao.insert(new Actividad("Vendo", true));
             actividadDao.insert(new Actividad("Ofresco un servício", true));
+
+            tipoVentaDao.insert(new TipoVenta("Negocio", true));
+            tipoVentaDao.insert(new TipoVenta("Personal", true));
 
             tipoNegocioDao.insert(new TipoNegocio("Tienda", true));
             tipoNegocioDao.insert(new TipoNegocio("Taqueria", true));
