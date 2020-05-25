@@ -1,5 +1,7 @@
 package com.lamarrulla.reproductosservicios.ui.vender;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static android.app.Activity.RESULT_OK;
+
 public class VenderFragment extends Fragment {
 
     private VenderViewModel venderViewModel;
@@ -42,6 +46,7 @@ public class VenderFragment extends Fragment {
     private MustVisitItemListener mItemListener;
 
     private final String TAG = getClass().getSimpleName();
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     //SpinnerBindingUtil spinnerBindingUtil;
     VenderDataBinding venderDataBinding;
@@ -95,10 +100,10 @@ public class VenderFragment extends Fragment {
         };
 
         binding.setVender(venderDataBinding);
-        binding.setHandler(mItemListener);
+        //binding.setHandler(mItemListener);
         //binding.setFirstTime(View.GONE);
 
-        venderViewModel = new ViewModelProvider(this).get(VenderViewModel.class);
+        /*venderViewModel = new ViewModelProvider(this).get(VenderViewModel.class);
 
         //final TextView textView = root.findViewById(R.id.text_vender);
         //final TextView textViewPS = root.findViewById(R.id.textProductoServicio);
@@ -108,7 +113,7 @@ public class VenderFragment extends Fragment {
                 //textView.setText(s);
                 //textViewPS.setText(s);
             }
-        });
+        });*/
         //return root;
         return view;
     }

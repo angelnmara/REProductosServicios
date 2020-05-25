@@ -1,25 +1,21 @@
 package com.lamarrulla.reproductosservicios.dataBinding;
 
+import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
-import android.widget.ActionMenuView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.AppCompatCheckedTextView;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.AppCompatTextView;
+import androidx.annotation.Nullable;
 import androidx.databinding.BindingAdapter;
-import androidx.databinding.InverseBindingAdapter;
-import androidx.databinding.InverseBindingListener;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -27,23 +23,25 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
-import com.lamarrulla.reproductosservicios.R;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
 import com.lamarrulla.reproductosservicios.entity.TipoNegocio;
 import com.lamarrulla.reproductosservicios.entity.TipoVenta;
+import com.lamarrulla.reproductosservicios.utils.Utils;
 import com.lamarrulla.reproductosservicios.viewModel.ActividadViewModel;
 import com.lamarrulla.reproductosservicios.viewModel.TipoNegocioViewModel;
 import com.lamarrulla.reproductosservicios.viewModel.TipoVentaViewModel;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class VenderDataBinding {
+
+    public final String TAG = this.getClass().getSimpleName();
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    static Utils utils;
 
     static Context context;
     static ActividadViewModel actividadViewModel;
@@ -52,26 +50,27 @@ public class VenderDataBinding {
 
     //static AutoCompleteTextView autoCompleteTextViewG;
     //static AutoCompleteTextView autoCompleteTextViewTVG;
-    static TextInputLayout textInputLayoutTVG;
-    static TextInputLayout textInputLayoutTipoNegocio;
+    static TextInputLayout textInputLayoutTipoVentaDLL;
+    static TextInputLayout textInputLayoutTipoNegocioDDL;
+    static TextInputLayout textInputLayoutTipoNegocioIT;
+    static ImageView imageViewFoto;
+
+    static Button btnAddFoto;
+
+    public VenderDataBinding(){}
 
     public VenderDataBinding(Context context) {
         this.context = context;
-        cargadatos();
+        utils = new Utils(context);
+        //cargadatos();
     }
 
     private static Boolean ft;
 //    static TextView textViewG;
 
     private String text;
-    public String value;
-    public Boolean mostrarTV;
-
-    static String[] tipoNegocio;
-    static String[] ddlCargando;
-    static String[] ddlTipoNegocio;
-
-    static ArrayAdapter<String> adapter;
+    //public String value;
+    //public Boolean mostrarTV;
 
     public String getText() {
         return text;
@@ -85,240 +84,158 @@ public class VenderDataBinding {
         VenderDataBinding.ft = ft;
     }
 
-    public void setMostrarTV(Boolean mostrarTV) {
-        this.mostrarTV = mostrarTV;
-    }
+    /*  Bindea text inputs y edit text para ocultar campos  */
 
-    @BindingAdapter("android:textInputTV")
-    public static void textInputTV(TextInputLayout textInputLayout, Boolean mostrarTV){
-        textInputLayoutTVG = textInputLayout;
+    @BindingAdapter("android:textInputTipoVenta")
+    public static void textInputTipoVenta(TextInputLayout textInputLayout, Boolean mostrarTV){
+        textInputLayoutTipoVentaDLL = textInputLayout;
         textInputLayout.setVisibility(View.GONE);
     }
 
-    private static void cargadatos() {
-        // carga ddl cargando
-        ddlCargando = context.getResources().getStringArray(R.array.ddlCargando);
-
-        // carga datos ddl tipo negocio
-        tipoNegocio = context.getResources().getStringArray(R.array.TipoNegocio);
+    @BindingAdapter("android:textInputTipoNegocio")
+    public static void textInputTipoNegocio(TextInputLayout textInputLayout, Boolean mostrar){
+        textInputLayoutTipoNegocioDDL = textInputLayout;
+        textInputLayout.setVisibility(View.GONE);
     }
 
-    @BindingAdapter(value = {"android:autoCompleteDR"}, requireAll = false)
-    public static void autoCompleteBinding(final AutoCompleteTextView autoCompleteTextView, Boolean mostrarTV){
-        cargadatosDDLQC(autoCompleteTextView);
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Boolean mostrarTV = false;
-                switch (((MaterialTextView) view).getText().toString()){
-                    case "Vendo":
-                        textInputLayoutTVG.setVisibility(View.VISIBLE);
-                        textInputLayoutTipoNegocio.setVisibility(View.GONE);
-                        break;
-                    case "Ofresco un servício":
-                        textInputLayoutTVG.setVisibility(View.GONE);
-                        textInputLayoutTipoNegocio.setVisibility(View.VISIBLE);
-                        textInputLayoutTipoNegocio.setHint("Que servicio ofresco?");
-                        break;
-                    default:
-                        textInputLayoutTVG.setVisibility(View.GONE);
-                        textInputLayoutTipoNegocio.setVisibility(View.GONE);
-                        break;
-                }
-            }
-        });
+    @BindingAdapter("android:textInputEditTipoNegocio")
+    public static void bindingTextInputEditTipoNegocio(TextInputLayout textInputLayout, Boolean mostrarTV){
+        textInputLayoutTipoNegocioIT = textInputLayout;
+        textInputLayout.setVisibility(View.GONE);
     }
 
+    @BindingAdapter("android:imageViewCamara")
+    public static void imageViewCamara(ImageView imageView, String text){
+        imageViewFoto = imageView;
+    }
+
+    /*  Termina Bindea text inputs y edit text para ocultar campos  */
+
+    /*  Carga datos */
     //carga tipos negocio
     private static void cargaDatosTipoNegocio(final AutoCompleteTextView autoCompleteTextView){
         tipoNegocioViewModel = ViewModelProviders.of((FragmentActivity) context).get(TipoNegocioViewModel.class);
         tipoNegocioViewModel.getAll().observe((LifecycleOwner) context, new Observer<List<TipoNegocio>>() {
             @Override
             public void onChanged(List<TipoNegocio> tipoNegocios) {
-                autoCompleteTextView.setAdapter(regresaAdaptador(new ArrayList<Object>(tipoNegocios)));
+                autoCompleteTextView.setAdapter(utils.regresaAdaptador(new ArrayList<Object>(tipoNegocios), "getTipoNegocio"));
             }
         });
     }
 
     //carga tipo venta
     private static void cargaDatosTipoVenta(final AutoCompleteTextView autoCompleteTextView){
-        //adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, ddlTipoNegocio);
-        //autoCompleteTextView.setAdapter(adapter);
         tipoVentaViewModel = ViewModelProviders.of((FragmentActivity) context).get(TipoVentaViewModel.class);
         tipoVentaViewModel.getAll().observe((LifecycleOwner) context, new Observer<List<TipoVenta>>() {
             @Override
             public void onChanged(List<TipoVenta> tipoVentas) {
-                autoCompleteTextView.setAdapter(regresaAdaptador(new ArrayList<Object>(tipoVentas)));
+                autoCompleteTextView.setAdapter(utils.regresaAdaptador(new ArrayList<Object>(tipoVentas), "getTipoVenta"));
             }
         });
     }
 
-    //Adaptador generico
-    private static ArrayAdapter<String> regresaAdaptador(List<Object> arregloString){
-        int size = arregloString.size();
-        if(size>0){
-            String[] tipos = new String[size];
-            int i = 0;
-            while(size>i){
-                try {
-                    Object o = arregloString.get(i);
-                    Class<?> clazz = o.getClass();
-                    //Field[] campos = clazz.getDeclaredFields();
-                    Method method = clazz.getDeclaredMethods()[1];
-                    tipos[i] = method.invoke(o).toString();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-                i++;
-            }
-            adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, tipos);
-        }
-        return adapter;
-    }
-
     // carga datos que hago?
-    private static void cargadatosDDLQC(final AutoCompleteTextView autoCompleteTextView) {
-        //autoCompleteTextViewG.setAdapter(adapter);
-        adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, ddlCargando);
-        autoCompleteTextView.setAdapter(adapter);
+    private static void cargadatosActividadTipo(final AutoCompleteTextView autoCompleteTextView) {
         actividadViewModel = ViewModelProviders.of((FragmentActivity) context).get(ActividadViewModel.class);
         actividadViewModel.getAll().observe((LifecycleOwner) context, new Observer<List<Actividad>>() {
             @Override
             public void onChanged(List<Actividad> actividads) {
-                int size = actividads.size();
-                if(size>0){
-                    String[] tiposActividades = new String[size];
-                    int i = 0;
-                    for (Actividad act: actividads
-                    ) {
-                        tiposActividades[i] = act.getActividadTipo();
-                        i++;
-                    }
-                    adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, tiposActividades);
-                    autoCompleteTextView.setAdapter(adapter);
+                autoCompleteTextView.setAdapter(utils.regresaAdaptador(new ArrayList<Object>(actividads), "getActividadTipo"));
+            }
+        });
+    }
+
+    /*  Termina Carga datos */
+
+    @BindingAdapter(value = {"android:autoCompleteActividadTipo"}, requireAll = false)
+    public static void autoCompleteActividadTipo(final AutoCompleteTextView autoCompleteTextView, Boolean mostrarTV){
+        cargadatosActividadTipo(autoCompleteTextView);
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Boolean mostrarTV = false;
+                switch (((MaterialTextView) view).getText().toString()){
+                    case "Vendo":
+                        textInputLayoutTipoVentaDLL.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoNegocioIT.setVisibility(View.GONE);
+                        break;
+                    case "Ofresco un servício":
+                        textInputLayoutTipoVentaDLL.setVisibility(View.GONE);
+                        textInputLayoutTipoNegocioIT.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoNegocioIT.setHint("Que servicio ofresco?");
+                        textInputLayoutTipoNegocioDDL.setVisibility(View.GONE);
+                        btnAddFoto.setVisibility(View.GONE);
+                        break;
+                    default:
+                        textInputLayoutTipoVentaDLL.setVisibility(View.GONE);
+                        textInputLayoutTipoNegocioIT.setVisibility(View.GONE);
+                        textInputLayoutTipoNegocioDDL.setVisibility(View.GONE);
+                        btnAddFoto.setVisibility(View.GONE);
+                        break;
                 }
             }
         });
     }
 
-    @BindingAdapter("android:autoCompleteTV")
-    public static void bindingAutoCompleteTV(final AutoCompleteTextView autoCompleteTextViewTV, String text){
+    @BindingAdapter("android:autoCompleteTipoVenta")
+    public static void autoCompleteTipoVenta(final AutoCompleteTextView autoCompleteTextViewTV, String text){
         cargaDatosTipoVenta(autoCompleteTextViewTV);
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, tipoNegocio);
-        //autoCompleteTextViewTV.setAdapter(adapter);
         autoCompleteTextViewTV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (((MaterialTextView) view).getText().toString()){
                     case "Negocio":
                         //Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
-                        textInputLayoutTipoNegocio.setVisibility(View.VISIBLE);
-                        textInputLayoutTipoNegocio.setHint("Que tipo de negocio?");
+                        textInputLayoutTipoNegocioIT.setVisibility(View.GONE);
+                        textInputLayoutTipoNegocioDDL.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoNegocioDDL.setHint("Cual es tu negocio?");
+                        btnAddFoto.setVisibility(View.GONE);
                         break;
                     case "Personal":
-                        textInputLayoutTipoNegocio.setVisibility(View.VISIBLE);
-                        textInputLayoutTipoNegocio.setHint("Que vendo?");
+                        textInputLayoutTipoNegocioIT.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoNegocioIT.setHint("Que vendo?");
+                        textInputLayoutTipoNegocioDDL.setVisibility(View.GONE);
+                        btnAddFoto.setVisibility(View.VISIBLE);
                         break;
                     default:
                         Toast.makeText(context, "Default", Toast.LENGTH_SHORT).show();
-                        textInputLayoutTipoNegocio.setVisibility(View.GONE);
+                        textInputLayoutTipoNegocioIT.setVisibility(View.GONE);
+                        textInputLayoutTipoNegocioDDL.setVisibility(View.GONE);
+                        btnAddFoto.setVisibility(View.GONE);
                         break;
                 }
             }
         });
     }
 
-    @BindingAdapter("android:textInputEditTipoNegocio")
-    public static void bindingTextInputEditTipoNegocio(TextInputLayout textInputLayout, Boolean mostrarTV){
-        textInputLayoutTipoNegocio = textInputLayout;
-        textInputLayout.setVisibility(View.GONE);
+    @BindingAdapter("android:autoCompleteTipoNegocio")
+    public static void autoCompleteTipoNegocio(final AutoCompleteTextView autoCompleteTextView, String text){
+        cargaDatosTipoNegocio(autoCompleteTextView);
     }
 
-    /*@BindingAdapter("android:Titulo")
-    public static void cambiaTitulo(TextView  textView, String text){
-        //textViewG = textView;
-        textView.setText(text);
-    }*/
-
-
-
-    /*@BindingAdapter(value = {"selectedValue", "selectedValueAttrChanged"}, requireAll = false)
-    public static void bindSpinnerData(AppCompatSpinner pAppCompatSpinner, String newSelectedValue, final InverseBindingListener newTextAttrChanged) {
-        pAppCompatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    @BindingAdapter("android:botonAddFoto")
+    public static void botonAddFoto(final Button button, String text){
+        button.setVisibility(View.GONE);
+        btnAddFoto = button;
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                newTextAttrChanged.onChange();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        if (newSelectedValue != null) {
-            int pos = ((ArrayAdapter<String>) pAppCompatSpinner.getAdapter()).getPosition(newSelectedValue);
-            pAppCompatSpinner.setSelection(pos, true);
-        }
-    }
-    @InverseBindingAdapter(attribute = "selectedValue", event = "selectedValueAttrChanged")
-    public static String captureSelectedValue(AppCompatSpinner pAppCompatSpinner) {
-        return (String) pAppCompatSpinner.getSelectedItem();
-    }*/
-
-    /*@BindingAdapter("android:text")
-    public static void bindTextVal(EditText editText, String val){
-        editText.setText(val);
-    }
-
-        @InverseBindingAdapter(attribute = "android:text")
-    public static String getStringFromBinding(EditText editText){
-        String value = editText.getText().toString();
-        value = "Hola mundo " + value;
-        Log.d("bindingInverse", value);
-        //textViewG.setText(value);
-        return value;
-    }*/
-
-    /*@BindingAdapter("android:ddlActividades")
-    public static void spinneRemoveTitulo(final Spinner spinner, final String tituloSpinner){
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(ft){
-                    if(view.getClass().toString().contains("MaterialTextView")){
-                        ((MaterialTextView) view).setText(tituloSpinner);
-                    }else if(view.getClass().toString().contains("AppCompatCheckedTextView")){
-                        Toast.makeText(context, ((AppCompatCheckedTextView) view).getText(), Toast.LENGTH_SHORT).show();
-                    }else if(view.getClass().toString().contains("AppCompatTextView")){
-                        ((AppCompatTextView) view).setText(tituloSpinner);
-                    }else{
-                        Toast.makeText(context, "otro", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(context.getClass().getName().contains("PrincipalActivity")){
+                    if(takePictureIntent.resolveActivity(context.getPackageManager()) != null){
+                        ((Activity) context).startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                     }
-                }else{
-                    String se = ((AdapterView) parent).getAdapter().getItem(position).toString();
-                    //visibleSpinner = View.GONE;
-                    //textViewG.setText(se);
-                    Toast.makeText(context, se, Toast.LENGTH_SHORT).show();
                 }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
-            }
-        });
-        spinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(ft){
-                    ((AppCompatSpinner) v).setSelection(1);
-                    ft = false;
-                }
-                return false;
             }
         });
     }
-    @InverseBindingAdapter(attribute = "android:spinneRemoveTitulo")
-    public static String captureSelectedValue(AppCompatSpinner pAppCompatSpinner) {
-        return (String) pAppCompatSpinner.getSelectedItem();
-    }*/
+
+    public void activityResult(int requestCode, int resultCode, @Nullable Intent data){
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageViewFoto.setImageBitmap(imageBitmap);
+        }
+
+    }
 }
