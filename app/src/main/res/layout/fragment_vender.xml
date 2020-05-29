@@ -88,11 +88,22 @@
             android:botonAddFoto="@{vender.text}">
         </Button>
 
-        <ImageView
+        <HorizontalScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:llImages="@{vender.text}">
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!--<ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:imageViewCamara="@{vender.text}">
-        </ImageView>
+        </ImageView>-->
 
         <!--<androidx.appcompat.widget.AppCompatSpinner
             android:layout_width="match_parent"
