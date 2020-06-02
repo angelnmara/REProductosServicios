@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +32,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
+import com.lamarrulla.reproductosservicios.GalleryActivity;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
 import com.lamarrulla.reproductosservicios.entity.TipoNegocio;
 import com.lamarrulla.reproductosservicios.entity.TipoVenta;
@@ -53,8 +56,9 @@ public class VenderDataBinding {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 2;
+    public static final String EXTRA_FOTO = "extra_foto";
 
-    static String currentPhotoPath;
+
     static Utils utils;
 
     static Context context;
@@ -246,7 +250,7 @@ public class VenderDataBinding {
                 if(context.getClass().getName().contains("PrincipalActivity")){
                     if(takePictureIntent.resolveActivity(context.getPackageManager()) != null){
                         File photoFile = null;
-                        photoFile = createImageFile();
+                        photoFile = utils.createImageFile();
                         Uri photoURI = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".dataBinding.VenderDataBinding",photoFile);
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                         ((Activity) context).startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
@@ -259,32 +263,35 @@ public class VenderDataBinding {
 
 
 
-    private static File createImageFile() {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = null;
-        try {
-            image = File.createTempFile(
-                    imageFileName,   /*prefix*/
-                    ".jpg",          /*suffix*/
-                    storageDir       /*directory*/
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
 
 
     public void activityResult(int requestCode, int resultCode, @Nullable Intent data){
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            galleryAddPic();
-            setPic();
+            Uri uri = utils.galleryAddPic();
+            ImageView imageView = utils.generateImageView();
+            Bitmap bitmap = utils.setPic();
+            imageView.setImageURI(uri);
+            imageView.setImageBitmap(bitmap);
+            linearLayoutFotos.addView(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, GalleryActivity.class);
+                    //String message = editText.getText().toString();
+                    //v.buildDrawingCache();
+                    ImageView imageView1 = (ImageView)v;
+                    imageView1.invalidate();
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView1.getDrawable();
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    Uri uri1 = utils.getImageUri(context, bitmap);
+                    intent.putExtra(EXTRA_FOTO, uri1.getPath());
+                    context.startActivity(intent);
+                    //GalleryFragment galleryFragment = new GalleryFragment();
+                    //((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_gallery, galleryFragment, "").addToBackStack("").commit();
+                    //context.getActivity().getSupportFragmentManager().beginTransaction().replace(v.getRootView().getId(), scrollingFragment, "").addToBackStack("").commit();
+                }
+            });
             /*
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -315,53 +322,5 @@ public class VenderDataBinding {
             linearLayoutFotos.addView(image);
              */
         }
-    }
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        context.sendBroadcast(mediaScanIntent);
-    }
-
-    private void setPic() {
-
-        int targetW = 400;
-        int targetH = 400;
-
-        // se genera bitmap
-        final ImageView image = new ImageView(context);
-        image.setLayoutParams(new android.view.ViewGroup.LayoutParams(targetW,targetH));
-        image.setMaxHeight(targetH);
-        image.setMaxWidth(targetW);
-
-        ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(image.getLayoutParams());
-        marginParams.setMargins(10, 10, 10, 10);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
-        image.setLayoutParams(layoutParams);
-
-        // Get the dimensions of the View
-        //int targetW = image.getWidth();
-        //int targetH = image.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        image.setImageBitmap(bitmap);
-        linearLayoutFotos.addView(image);
     }
 }

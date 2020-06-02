@@ -3,9 +3,13 @@
     package="com.lamarrulla.reproductosservicios">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18"></uses-permission>
-    <uses-feature android:name="android.hardware.camera" android:required="true"></uses-feature>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents">
+        <activity
+            android:name=".GalleryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_gallery"
+            android:theme="@style/Theme.MaterialComponents.Fullscreen"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -22,13 +31,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
             android:name=".PrincipalActivity"
             android:label="@string/title_activity_principal"
-            android:theme="@style/Theme.MaterialComponents.DayNight"></activity>
+            android:theme="@style/Theme.MaterialComponents.DayNight" />
         <activity android:name=".UserActivity" />
         <activity
             android:name=".PSActivity"
