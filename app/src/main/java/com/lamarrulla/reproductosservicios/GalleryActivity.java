@@ -5,16 +5,24 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.lamarrulla.reproductosservicios.dataBinding.VenderDataBinding;
 import com.lamarrulla.reproductosservicios.utils.Utils;
+
+import java.io.File;
+
+import static com.lamarrulla.reproductosservicios.dataBinding.VenderDataBinding.EXTRA_FOTO;
+import static com.lamarrulla.reproductosservicios.dataBinding.VenderDataBinding.EXTRA_IMAGEVIEW;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -23,7 +31,10 @@ import com.lamarrulla.reproductosservicios.utils.Utils;
 public class GalleryActivity extends AppCompatActivity {
 
     private static String currentPhotoPath;
-    public static final String EXTRA_FOTO = "extra_foto";
+    //public static final String EXTRA_FOTO = "extra_foto";
+    private final String TAG = this.getClass().getSimpleName();
+    VenderDataBinding venderDataBinding;
+    //private Button button;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -134,7 +145,29 @@ public class GalleryActivity extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        findViewById(R.id.dummy_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteFile();
+            }
+        });
+        /*button = findViewById(R.id.dummy_button);
+        button.setVisibility(View.GONE);
+        button.setOnTouchListener(mDelayHideTouchListener);*/
+    }
+
+    private void deleteFile(){
+        File file = new File(currentPhotoPath);
+        if(file.exists()){
+            if(file.delete()){
+                Log.d(TAG, "file borradao");
+                venderDataBinding = new VenderDataBinding();
+                venderDataBinding.removeImageView(currentPhotoPath);
+                this.finish();
+            }else{
+                Log.d(TAG, "No se pudo borrar la file");
+            }
+        }
     }
 
     @Override
@@ -167,6 +200,7 @@ public class GalleryActivity extends AppCompatActivity {
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
+        //button.setVisibility(View.GONE);
     }
 
     private void show() {
@@ -178,6 +212,7 @@ public class GalleryActivity extends AppCompatActivity {
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+        //button.setVisibility(View.VISIBLE);
     }
 
     /**

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/NoActionBar.FullscreenContainer"
-    tools:context=".GalleryActivity">
+    tools:context=".GalleryActivity"
+    android:background="@color/colorPrimaryLight">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -30,11 +31,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            tools:ignore="UselessParent"
+            >
 
             <Button
                 android:id="@+id/dummy_button"
-                style="?android:attr/buttonBarStyle"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -44,6 +46,7 @@
     </FrameLayout>
 
 </FrameLayout>
+
 
     <!--android:text="@string/dummy_content"-->
     <!--android:textColor="?attr/fullscreenTextColor"-->

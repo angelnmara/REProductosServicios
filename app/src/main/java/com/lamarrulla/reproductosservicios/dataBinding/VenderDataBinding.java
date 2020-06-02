@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -22,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
@@ -43,6 +45,7 @@ import com.lamarrulla.reproductosservicios.viewModel.TipoVentaViewModel;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +60,7 @@ public class VenderDataBinding {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 2;
     public static final String EXTRA_FOTO = "extra_foto";
+    public static final String EXTRA_IMAGEVIEW = "extra_imageView";
 
 
     static Utils utils;
@@ -75,6 +79,7 @@ public class VenderDataBinding {
     //static ImageView imageViewFoto;
     static LinearLayout linearLayoutFotos;
     static Button btnAddFoto;
+    private ImageView imageViewTemp;
 
     boolean isImageFitToScreen;
 
@@ -262,10 +267,20 @@ public class VenderDataBinding {
     }
 
 
+    public void removeImageView(String path){
+        for(int i=0; i<linearLayoutFotos.getChildCount(); i++){
+            View v = linearLayoutFotos.getChildAt(i);
+            if(v instanceof ImageView){
+                if(path.contains(v.getTransitionName().toString())){
+                    v.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
 
 
 
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void activityResult(int requestCode, int resultCode, @Nullable Intent data){
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Uri uri = utils.galleryAddPic();
@@ -273,19 +288,17 @@ public class VenderDataBinding {
             Bitmap bitmap = utils.setPic();
             imageView.setImageURI(uri);
             imageView.setImageBitmap(bitmap);
+            //CharSequence cs = utils.getCurrentPhotoPath();
+            imageView.setTransitionName(utils.getCurrentPhotoPath());
             linearLayoutFotos.addView(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    imageViewTemp = (ImageView) v;
                     Intent intent = new Intent(context, GalleryActivity.class);
                     //String message = editText.getText().toString();
                     //v.buildDrawingCache();
-                    ImageView imageView1 = (ImageView)v;
-                    imageView1.invalidate();
-                    BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView1.getDrawable();
-                    Bitmap bitmap = bitmapDrawable.getBitmap();
-                    Uri uri1 = utils.getImageUri(context, bitmap);
-                    intent.putExtra(EXTRA_FOTO, uri1.getPath());
+                    intent.putExtra(EXTRA_FOTO, v.getTransitionName());
                     context.startActivity(intent);
                     //GalleryFragment galleryFragment = new GalleryFragment();
                     //((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_gallery, galleryFragment, "").addToBackStack("").commit();
