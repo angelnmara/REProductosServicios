@@ -6,20 +6,37 @@
         <variable
             name="user"
             type="com.lamarrulla.reproductosservicios.entity.User" />
+
+        <variable
+            name="vender"
+            type="com.lamarrulla.reproductosservicios.dataBinding.VenderDataBinding" />
+
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="90dp">
+        android:orientation="vertical">
 
-        <ImageView
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutConfg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pagerConfg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        </androidx.viewpager.widget.ViewPager>
+
+        <!--<ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
             bind:avatar="@{user.avatar}"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="40dp">
+            android:layout_margin="20dp">
         </ImageView>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -72,26 +89,66 @@
             </EditText>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/producto_o_servicio">
-        </EditText>
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Switch
-                android:id="@+id/swEnvio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </Switch>
-            <TextView
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/envio_a_domicilio">
-            </TextView>
-        </LinearLayout>
+                android:hint="@string/producto_o_servicio"
+                android:autoCompleteActividadTipo="@{false}"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textInputTipoVenta="@{false}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tipoVentas"
+                android:autoCompleteTipoVenta="@{vender.text}"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textInputTipoNegocio="@{false}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Que tipo de negocio tengo?"
+                android:autoCompleteTipoNegocio="@{vender.text}"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textInputEditTipoNegocio="@{false}">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Que tipo de negocio tengo?">
+            </EditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:text="Agregar Foto"
+            android:layout_gravity="center_horizontal"
+            android:botonAddFoto="@{vender.text}">
+        </Button>-->
+
+
     </LinearLayout>
 
 </layout>

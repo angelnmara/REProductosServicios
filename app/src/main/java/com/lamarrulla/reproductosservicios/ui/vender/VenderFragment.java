@@ -1,46 +1,25 @@
 package com.lamarrulla.reproductosservicios.ui.vender;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.opengl.Visibility;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
-import com.facebook.login.LoginResult;
+import com.google.android.material.tabs.TabLayout;
 import com.lamarrulla.reproductosservicios.R;
 import com.lamarrulla.reproductosservicios.dataBinding.VenderDataBinding;
-import com.lamarrulla.reproductosservicios.databinding.FragmentVenderBindingImpl;
-import com.lamarrulla.reproductosservicios.entity.Actividad;
 import com.lamarrulla.reproductosservicios.interfaces.MustVisitItemListener;
-import com.lamarrulla.reproductosservicios.utils.SpinnerBindingUtil;
 import com.lamarrulla.reproductosservicios.viewModel.ActividadViewModel;
 import com.lamarrulla.reproductosservicios.viewModel.UserViewModel;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import static android.app.Activity.RESULT_OK;
+import com.lamarrulla.reproductosservicios.viewPagerAdapter.ViewPagerAdapterVender;
 
 public class VenderFragment extends Fragment {
 
-    private VenderViewModel venderViewModel;
     private ActividadViewModel actividadViewModel;
     private UserViewModel userViewModel;
     private MustVisitItemListener mItemListener;
@@ -50,24 +29,29 @@ public class VenderFragment extends Fragment {
 
     //SpinnerBindingUtil spinnerBindingUtil;
     VenderDataBinding venderDataBinding;
+    ViewPager viewPager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        //View root = inflater.inflate(R.layout.fragment_vender, container, false);
+        View root = inflater.inflate(R.layout.fragment_vender, container, false);
 
         /*spinnerBindingUtil = new SpinnerBindingUtil(getContext());
         spinnerBindingUtil.setFt(true);*/
 
-        venderDataBinding = new VenderDataBinding(getContext());
-
         //venderDataBinding.setFt(true);
+
+        /*Este es el pedaso ok*/
+
+        /*venderDataBinding = new VenderDataBinding(getContext());
 
         final FragmentVenderBindingImpl binding = DataBindingUtil.inflate(inflater, R.layout.fragment_vender, container, false);
         View view = binding.getRoot();
+        binding.setVender(venderDataBinding);
+
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);*/
 
 
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         /*actividadViewModel = ViewModelProviders.of(this).get(ActividadViewModel.class);
 
         actividadViewModel.getAll().observe(this, new Observer<List<Actividad>>() {
@@ -87,7 +71,7 @@ public class VenderFragment extends Fragment {
             }
         });*/
 
-        mItemListener = new MustVisitItemListener() {
+        /*mItemListener = new MustVisitItemListener() {
             @Override
             public void onSaveClick() {
                 Log.i(TAG, "Vender fragment click");
@@ -97,9 +81,9 @@ public class VenderFragment extends Fragment {
             public void onSpinnerClick() {
                 Log.i(TAG, "Spinner click");
             }
-        };
+        };*/
 
-        binding.setVender(venderDataBinding);
+
         //binding.setHandler(mItemListener);
         //binding.setFirstTime(View.GONE);
 
@@ -115,6 +99,15 @@ public class VenderFragment extends Fragment {
             }
         });*/
         //return root;
-        return view;
+
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        viewPager = view.findViewById(R.id.view_pager);
+        viewPager.setAdapter(new ViewPagerAdapterVender(getFragmentManager()));
+        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 }

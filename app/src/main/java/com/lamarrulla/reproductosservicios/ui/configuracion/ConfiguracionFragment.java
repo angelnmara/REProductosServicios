@@ -4,22 +4,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.lamarrulla.reproductosservicios.R;
 //import com.lamarrulla.reproductosservicios.data.User;
-import com.lamarrulla.reproductosservicios.databinding.ActivityUserBinding;
+import com.lamarrulla.reproductosservicios.dataBinding.VenderDataBinding;
 import com.lamarrulla.reproductosservicios.databinding.FragmentConfiguracionBindingImpl;
 import com.lamarrulla.reproductosservicios.viewModel.UserViewModel;
+import com.lamarrulla.reproductosservicios.viewPagerAdapter.ViewPagerAdapterConfiguracion;
 
 import java.util.List;
 
@@ -27,13 +27,20 @@ public class ConfiguracionFragment extends Fragment {
 
     //private ConfiguracionViewModel configuracionViewModel;
     private UserViewModel userViewModel;
+    private VenderDataBinding venderDataBinding;
+    ViewPager viewPagerConfig;
+    TabLayout tabLayoutConfig;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        final FragmentConfiguracionBindingImpl binding = DataBindingUtil.inflate(inflater, R.layout.fragment_configuracion, container, false);
+        View root = inflater.inflate(R.layout.fragment_configuracion, container, false);
+
+        /*funcionalidad ok*/
+        /*final FragmentConfiguracionBindingImpl binding = DataBindingUtil.inflate(inflater, R.layout.fragment_configuracion, container, false);
         View view = binding.getRoot();
 
+        venderDataBinding = new VenderDataBinding(getContext());
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         //binding.setUser(userViewModel.getUser());
 
@@ -47,9 +54,9 @@ public class ConfiguracionFragment extends Fragment {
                     binding.setUser(users.get(0));
                 }
             }
-        });
+        });*/
 
-        return view;
+        return root;
         /*configuracionViewModel =
                 new ViewModelProvider(this).get(ConfiguracionViewModel.class);
         View root = inflater.inflate(R.layout.fragment_configuracion, container, false);
@@ -61,5 +68,13 @@ public class ConfiguracionFragment extends Fragment {
             }
         });
         return root;*/
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        viewPagerConfig = view.findViewById(R.id.view_pagerConfg);
+        viewPagerConfig.setAdapter(new ViewPagerAdapterConfiguracion(getFragmentManager()));
+        tabLayoutConfig = view.findViewById(R.id.tabLayoutConfg);
+        tabLayoutConfig.setupWithViewPager(viewPagerConfig);
     }
 }
