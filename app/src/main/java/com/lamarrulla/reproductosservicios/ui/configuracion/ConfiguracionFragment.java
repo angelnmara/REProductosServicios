@@ -4,24 +4,30 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.lamarrulla.reproductosservicios.R;
-//import com.lamarrulla.reproductosservicios.data.User;
 import com.lamarrulla.reproductosservicios.dataBinding.VenderDataBinding;
-import com.lamarrulla.reproductosservicios.databinding.FragmentConfiguracionBindingImpl;
+import com.lamarrulla.reproductosservicios.entity.FragmentMenu;
+import com.lamarrulla.reproductosservicios.viewModel.FragmentMenuViewModel;
 import com.lamarrulla.reproductosservicios.viewModel.UserViewModel;
 import com.lamarrulla.reproductosservicios.viewPagerAdapter.ViewPagerAdapterConfiguracion;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class ConfiguracionFragment extends Fragment {
 
@@ -30,6 +36,7 @@ public class ConfiguracionFragment extends Fragment {
     private VenderDataBinding venderDataBinding;
     ViewPager viewPagerConfig;
     TabLayout tabLayoutConfig;
+    public static FragmentMenuViewModel fragmentMenuViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -73,8 +80,18 @@ public class ConfiguracionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewPagerConfig = view.findViewById(R.id.view_pagerConfg);
-        viewPagerConfig.setAdapter(new ViewPagerAdapterConfiguracion(getFragmentManager()));
-        tabLayoutConfig = view.findViewById(R.id.tabLayoutConfg);
-        tabLayoutConfig.setupWithViewPager(viewPagerConfig);
+        fragmentMenuViewModel = ViewModelProviders.of((FragmentActivity) getContext()).get(FragmentMenuViewModel.class);
+        fragmentMenuViewModel.getAll().observe(this, new Observer<List<FragmentMenu>>() {
+            @Override
+            public void onChanged(List<FragmentMenu> fragmentMenus) {
+                if(fragmentMenus.size()>0){
+                    List<FragmentMenu> listaLimpiaMenu = fragmentMenus.stream().filter(menu->menu.getIdMenu()==2).collect(toList());
+                    viewPagerConfig.setAdapter(new ViewPagerAdapterConfiguracion(getFragmentManager(), listaLimpiaMenu));
+                    tabLayoutConfig = view.findViewById(R.id.tabLayoutConfg);
+                    tabLayoutConfig.setupWithViewPager(viewPagerConfig);
+                }
+            }
+        });
+
     }
 }

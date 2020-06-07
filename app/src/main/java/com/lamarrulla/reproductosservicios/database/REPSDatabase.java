@@ -10,17 +10,19 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.lamarrulla.reproductosservicios.dao.ActividadDao;
+import com.lamarrulla.reproductosservicios.dao.FragmentMenuDao;
 import com.lamarrulla.reproductosservicios.dao.TipoServicioDao;
 import com.lamarrulla.reproductosservicios.dao.TipoNegocioDao;
 import com.lamarrulla.reproductosservicios.dao.TipoVentaDao;
 import com.lamarrulla.reproductosservicios.dao.UserDao;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
+import com.lamarrulla.reproductosservicios.entity.FragmentMenu;
 import com.lamarrulla.reproductosservicios.entity.TipoNegocio;
 import com.lamarrulla.reproductosservicios.entity.TipoServicio;
 import com.lamarrulla.reproductosservicios.entity.TipoVenta;
 import com.lamarrulla.reproductosservicios.entity.User;
 
-@Database(entities = {User.class, Actividad.class, TipoServicio.class, TipoNegocio.class, TipoVenta.class}, version = 3, exportSchema = false)
+@Database(entities = {User.class, Actividad.class, TipoServicio.class, TipoNegocio.class, TipoVenta.class, FragmentMenu.class}, version = 4, exportSchema = false)
 public abstract class REPSDatabase extends RoomDatabase {
     private static REPSDatabase instance;
     public abstract UserDao userDao();
@@ -28,6 +30,7 @@ public abstract class REPSDatabase extends RoomDatabase {
     public abstract TipoServicioDao tipoServicioDao();
     public abstract TipoNegocioDao tipoNegocioDao();
     public abstract TipoVentaDao tipoVentaDao();
+    public abstract FragmentMenuDao fragmentMenuDao();
 
     public static synchronized REPSDatabase getInstance(Context context){
         if(instance==null){
@@ -53,6 +56,7 @@ public abstract class REPSDatabase extends RoomDatabase {
         private TipoServicioDao tipoServicioDao;
         private TipoNegocioDao tipoNegocioDao;
         private TipoVentaDao tipoVentaDao;
+        private FragmentMenuDao fragmentMenuDao;
 
         private PopulateDbAsyncTask(REPSDatabase db){
             actividadDao = db.actividadDao();
@@ -60,10 +64,17 @@ public abstract class REPSDatabase extends RoomDatabase {
             tipoServicioDao = db.tipoServicioDao();
             tipoNegocioDao = db.tipoNegocioDao();
             tipoVentaDao = db.tipoVentaDao();
+            fragmentMenuDao = db.fragmentMenuDao();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
+
+            fragmentMenuDao.insert(new FragmentMenu(1, 1, "Lista de Articulos", "ArticuloFragment", true));
+            fragmentMenuDao.insert(new FragmentMenu(1, 2, "Agrega Articulos", "AgregaArticuloFragment", true));
+            fragmentMenuDao.insert(new FragmentMenu(2, 1, "Datos Personales", "DatosPersonalesFragment", true));
+            fragmentMenuDao.insert(new FragmentMenu(2, 2, "Datos Vendedor", "DatosVentaFragment", true));
+
             userDao.insert(new User("dave rincon", "dr@gmail.com", "55555555", "sierra dorada", "https://graph.facebook.com/3123179174379593/picture"));
             userDao.insert(new User("angel rincon", "ar@gmail.com", "55555555", "sierra dorada", "https://graph.facebook.com/3123179174379593/picture"));
             userDao.insert(new User("andres rincon", "andr@gmail.com", "55555555", "sierra dorada", "https://graph.facebook.com/3123179174379593/picture"));

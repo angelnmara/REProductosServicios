@@ -28,8 +28,8 @@ public class VenderFragment extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     //SpinnerBindingUtil spinnerBindingUtil;
-    VenderDataBinding venderDataBinding;
-    ViewPager viewPager;
+    //VenderDataBinding venderDataBinding;
+    ViewPager viewPagerVender;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -105,9 +105,9 @@ public class VenderFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        viewPager = view.findViewById(R.id.view_pager);
-        viewPager.setAdapter(new ViewPagerAdapterVender(getFragmentManager()));
-        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
+        viewPagerVender = view.findViewById(R.id.view_pagerVender);
+        viewPagerVender.setAdapter(new ViewPagerAdapterVender(getFragmentManager()));
+        TabLayout tabLayout = view.findViewById(R.id.tabLayoutVender);
+        tabLayout.setupWithViewPager(viewPagerVender);
     }
 }

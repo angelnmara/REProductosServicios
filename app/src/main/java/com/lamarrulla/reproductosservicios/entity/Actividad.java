@@ -7,8 +7,6 @@ import android.widget.AdapterView;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.lamarrulla.reproductosservicios.interfaces.MustVisitItemListener;
-
 @Entity(tableName = "actividad_table")
 public class Actividad {
 

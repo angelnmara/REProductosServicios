@@ -6,28 +6,35 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.lamarrulla.reproductosservicios.fragments.DatosPersonalesFragment;
-import com.lamarrulla.reproductosservicios.fragments.AgregarArticuloFragment;
+
+import com.lamarrulla.reproductosservicios.entity.FragmentMenu;
+
+import java.util.List;
 
 public class ViewPagerAdapterConfiguracion extends FragmentStatePagerAdapter {
 
     public static final int NUM_PAGES = 2;
+    private static List<FragmentMenu> fragmentmenuStatic;
 
-    public ViewPagerAdapterConfiguracion(FragmentManager fm){
+    public ViewPagerAdapterConfiguracion(FragmentManager fm, List<FragmentMenu> fragmentMenus){
         super(fm);
+        fragmentmenuStatic = fragmentMenus;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        switch (position)
-        {
-            case 0:
-                return new DatosPersonalesFragment(); //ChildFragment1 at position 0
-            case 1:
-                return new AgregarArticuloFragment(); //ChildFragment2 at position 1
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) Class.forName("com.lamarrulla.reproductosservicios.fragments." + fragmentmenuStatic.get(position).getFragmentName()).newInstance();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        return null; //does not happen
+        return fragment;
     }
 
     @Override
@@ -38,6 +45,6 @@ public class ViewPagerAdapterConfiguracion extends FragmentStatePagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Object" + (position + 1);
+        return fragmentmenuStatic.get(position).getMenuName();
     }
 }
