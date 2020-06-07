@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.lamarrulla.reproductosservicios.R;
 import com.lamarrulla.reproductosservicios.dataBinding.VenderDataBinding;
 import com.lamarrulla.reproductosservicios.databinding.FragmentAgregarArticuloBindingImpl;
+import com.lamarrulla.reproductosservicios.databinding.FragmentDatosVentaBindingImpl;
 import com.lamarrulla.reproductosservicios.viewModel.UserViewModel;
 
 /**
@@ -72,7 +73,7 @@ public class DatosVentaFragment extends Fragment {
 
         venderDataBinding = new VenderDataBinding(getContext());
 
-        final FragmentAgregarArticuloBindingImpl binding = DataBindingUtil.inflate(inflater, R.layout.fragment_agregar_articulo, container, false);
+        final FragmentDatosVentaBindingImpl binding = DataBindingUtil.inflate(inflater, R.layout.fragment_datos_venta, container, false);
         View view = binding.getRoot();
         binding.setVender(venderDataBinding);
 
