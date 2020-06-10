@@ -25,6 +25,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
+            android:SaveAvatar="@{user.avatar}"
             bind:avatar="@{user.avatar}"
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintStart_toStartOf="parent"
@@ -47,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/nombre"
-                android:text="@{user.nombre}"></EditText>
+                android:text="@={user.nombre}"></EditText>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,7 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/correo_electronico"
-                android:text="@{user.email}"></EditText>
+                android:inputType="textEmailAddress"
+                android:text="@={user.email}"></EditText>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -89,7 +91,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/telefono"
-                android:text="@{user.telefono}"></EditText>
+                android:inputType="phone"
+                android:text="@={user.telefono}"></EditText>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -109,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/direccion"
-                android:text="@{user.direccion}"></EditText>
+                android:text="@={user.direccion}"></EditText>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -122,6 +125,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="32dp"
             android:text="@string/guardar"
+            android:GuardaUsuario="@{user}"
             bind:layout_constraintBottom_toBottomOf="parent"
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintStart_toStartOf="parent" />

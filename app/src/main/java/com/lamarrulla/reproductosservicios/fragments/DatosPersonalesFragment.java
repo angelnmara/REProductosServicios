@@ -35,7 +35,7 @@ public class DatosPersonalesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private VenderDataBinding venderDataBinding;
+    //private VenderDataBinding venderDataBinding;
     private UserViewModel userViewModel;
 
     public DatosPersonalesFragment() {
@@ -76,10 +76,11 @@ public class DatosPersonalesFragment extends Fragment {
         final FragmentDatosPersonalesBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_datos_personales, container, false);
         View view = binding.getRoot();
 
-        venderDataBinding = new VenderDataBinding(getContext());
+        //venderDataBinding = new VenderDataBinding(getContext());
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         //binding.setUser(userViewModel.getUser());
 
+        User user = new User(getContext());
 
         userViewModel.getAllUsers().observe(this, new Observer<List<User>>() {
             @Override
