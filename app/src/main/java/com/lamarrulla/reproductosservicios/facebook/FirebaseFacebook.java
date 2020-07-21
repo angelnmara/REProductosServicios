@@ -22,6 +22,7 @@ import com.lamarrulla.reproductosservicios.utils.UtilsActivity;
 
 public class FirebaseFacebook {
     public final String TAG = this.getClass().getSimpleName();
+    static Boolean isLogOk = false;
     UtilsActivity utilsActivity;
 
     public void setmAuth(FirebaseAuth mAuth) {
@@ -56,7 +57,7 @@ public class FirebaseFacebook {
         ).executeAsync();
     }
 
-    public void handleFacebookAccessToken() {
+    public Boolean handleFacebookAccessToken() {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -77,15 +78,18 @@ public class FirebaseFacebook {
                             utilsActivity.CallPSActivity();
 
                             //updateUI(user);
+                            isLogOk = true;
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(context, "Authentication failed.",
+                            Toast.makeText(context, "Authentication failed: " + task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                             //updateUI(null);
+                            isLogOk = false;
                         }
                     }
                 });
+        return isLogOk;
     }
 
 }

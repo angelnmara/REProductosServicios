@@ -23,6 +23,7 @@
     <string name="title_notifications">Configuración</string>
     <string name="producto_o_servicio">Que hago?</string>
     <string name="tipoVentas">Que tipo de ventas tengo?</string>
+    <string name="tipoServicio">Que tipo de servicio?</string>
     <string name="nombre">Nombre</string>
     <string name="telefono">Teléfono</string>
     <string name="direccion">Dirección</string>

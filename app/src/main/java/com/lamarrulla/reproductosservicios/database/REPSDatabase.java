@@ -15,6 +15,7 @@ import com.lamarrulla.reproductosservicios.dao.TipoServicioDao;
 import com.lamarrulla.reproductosservicios.dao.TipoNegocioDao;
 import com.lamarrulla.reproductosservicios.dao.TipoVentaDao;
 import com.lamarrulla.reproductosservicios.dao.UserDao;
+import com.lamarrulla.reproductosservicios.dao.UserTipoNSV;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
 import com.lamarrulla.reproductosservicios.entity.FragmentMenu;
 import com.lamarrulla.reproductosservicios.entity.TipoNegocio;
@@ -22,7 +23,7 @@ import com.lamarrulla.reproductosservicios.entity.TipoServicio;
 import com.lamarrulla.reproductosservicios.entity.TipoVenta;
 import com.lamarrulla.reproductosservicios.entity.User;
 
-@Database(entities = {User.class, Actividad.class, TipoServicio.class, TipoNegocio.class, TipoVenta.class, FragmentMenu.class}, version = 4, exportSchema = false)
+@Database(entities = {User.class, Actividad.class, TipoServicio.class, TipoNegocio.class, TipoVenta.class, FragmentMenu.class, UserTipoNSV.class}, version = 4, exportSchema = false)
 public abstract class REPSDatabase extends RoomDatabase {
     private static REPSDatabase instance;
     public abstract UserDao userDao();
@@ -31,6 +32,7 @@ public abstract class REPSDatabase extends RoomDatabase {
     public abstract TipoNegocioDao tipoNegocioDao();
     public abstract TipoVentaDao tipoVentaDao();
     public abstract FragmentMenuDao fragmentMenuDao();
+    public abstract UserTipoNSV userTipoNSVDao();
 
     public static synchronized REPSDatabase getInstance(Context context){
         if(instance==null){
@@ -57,6 +59,7 @@ public abstract class REPSDatabase extends RoomDatabase {
         private TipoNegocioDao tipoNegocioDao;
         private TipoVentaDao tipoVentaDao;
         private FragmentMenuDao fragmentMenuDao;
+        private UserTipoNSV userTipoNSVDao;
 
         private PopulateDbAsyncTask(REPSDatabase db){
             actividadDao = db.actividadDao();
@@ -65,6 +68,7 @@ public abstract class REPSDatabase extends RoomDatabase {
             tipoNegocioDao = db.tipoNegocioDao();
             tipoVentaDao = db.tipoVentaDao();
             fragmentMenuDao = db.fragmentMenuDao();
+            userTipoNSVDao = db.userTipoNSVDao();
         }
 
         @Override

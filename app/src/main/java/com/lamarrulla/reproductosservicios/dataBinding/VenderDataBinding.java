@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -37,10 +38,12 @@ import com.google.android.material.textview.MaterialTextView;
 import com.lamarrulla.reproductosservicios.GalleryActivity;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
 import com.lamarrulla.reproductosservicios.entity.TipoNegocio;
+import com.lamarrulla.reproductosservicios.entity.TipoServicio;
 import com.lamarrulla.reproductosservicios.entity.TipoVenta;
 import com.lamarrulla.reproductosservicios.utils.Utils;
 import com.lamarrulla.reproductosservicios.viewModel.ActividadViewModel;
 import com.lamarrulla.reproductosservicios.viewModel.TipoNegocioViewModel;
+import com.lamarrulla.reproductosservicios.viewModel.TipoServicioViewModel;
 import com.lamarrulla.reproductosservicios.viewModel.TipoVentaViewModel;
 
 import java.io.File;
@@ -63,22 +66,25 @@ public class VenderDataBinding {
     public static final String EXTRA_IMAGEVIEW = "extra_imageView";
 
 
-    static Utils utils;
+    private static Utils utils;
 
     static Context context;
     static ActividadViewModel actividadViewModel;
     static TipoNegocioViewModel tipoNegocioViewModel;
     static TipoVentaViewModel tipoVentaViewModel;
+    static TipoServicioViewModel tipoServicioViewModel;
+
 
     //static AutoCompleteTextView autoCompleteTextViewG;
     //static AutoCompleteTextView autoCompleteTextViewTVG;
 
     static TextInputLayout textInputLayoutTipoVentaDLL;
     static TextInputLayout textInputLayoutTipoNegocioDDL;
+    static TextInputLayout textInputLayoutTipoServicioDDL;
     static TextInputLayout textInputLayoutTipoNegocioIT;
     //static ImageView imageViewFoto;
     static LinearLayout linearLayoutFotos;
-    static Button btnAddFoto;
+    static Button btnGuardar;
     private ImageView imageViewTemp;
 
     boolean isImageFitToScreen;
@@ -124,6 +130,12 @@ public class VenderDataBinding {
         textInputLayout.setVisibility(View.GONE);
     }
 
+    @BindingAdapter("android:textInputTipoServicio")
+    public static void textInputTipoServicio(TextInputLayout textInputLayout, Boolean mostrar){
+        textInputLayoutTipoServicioDDL = textInputLayout;
+        textInputLayout.setVisibility(View.GONE);
+    }
+
     @BindingAdapter("android:textInputEditTipoNegocio")
     public static void bindingTextInputEditTipoNegocio(TextInputLayout textInputLayout, Boolean mostrarTV){
         textInputLayoutTipoNegocioIT = textInputLayout;
@@ -150,6 +162,16 @@ public class VenderDataBinding {
             @Override
             public void onChanged(List<TipoNegocio> tipoNegocios) {
                 autoCompleteTextView.setAdapter(utils.regresaAdaptador(new ArrayList<Object>(tipoNegocios), "getTipoNegocio"));
+            }
+        });
+    }
+
+    public static void cargaDatosTipoServicio(final AutoCompleteTextView autoCompleteTextView){
+        tipoServicioViewModel = ViewModelProviders.of((FragmentActivity) context).get(TipoServicioViewModel.class);
+        tipoServicioViewModel.getAll().observe((LifecycleOwner) context, new Observer<List<TipoServicio>>() {
+            @Override
+            public void onChanged(List<TipoServicio> tipoServicios) {
+                autoCompleteTextView.setAdapter(utils.regresaAdaptador(new ArrayList<Object>(tipoServicios), "getTipoServicio"));
             }
         });
     }
@@ -188,24 +210,32 @@ public class VenderDataBinding {
                 switch (((MaterialTextView) view).getText().toString()){
                     case "Vendo":
                         textInputLayoutTipoVentaDLL.setVisibility(View.VISIBLE);
+                        textInputLayoutTipoServicioDDL.setVisibility(View.GONE);
                         textInputLayoutTipoNegocioIT.setVisibility(View.GONE);
+                        btnGuardar.setVisibility(View.GONE);
                         break;
                     case "Ofresco un servício":
                         textInputLayoutTipoVentaDLL.setVisibility(View.GONE);
-                        textInputLayoutTipoNegocioIT.setVisibility(View.VISIBLE);
-                        textInputLayoutTipoNegocioIT.setHint("Que servicio ofresco?");
+                        textInputLayoutTipoServicioDDL.setVisibility(View.VISIBLE);
+                        //textInputLayoutTipoNegocioIT.setVisibility(View.VISIBLE);
+                        //textInputLayoutTipoNegocioIT.setHint("Que servicio ofresco?");
                         textInputLayoutTipoNegocioDDL.setVisibility(View.GONE);
-                        btnAddFoto.setVisibility(View.GONE);
+                        btnGuardar.setVisibility(View.VISIBLE);
                         break;
                     default:
                         textInputLayoutTipoVentaDLL.setVisibility(View.GONE);
                         textInputLayoutTipoNegocioIT.setVisibility(View.GONE);
                         textInputLayoutTipoNegocioDDL.setVisibility(View.GONE);
-                        btnAddFoto.setVisibility(View.GONE);
+                        btnGuardar.setVisibility(View.GONE);
                         break;
                 }
             }
         });
+    }
+
+    @BindingAdapter("android:autoCompleteTipoServicio")
+    public static void autoCompleteTipoServicio(final AutoCompleteTextView autoCompleteTextView, String text){
+        cargaDatosTipoServicio(autoCompleteTextView);
     }
 
     @BindingAdapter("android:autoCompleteTipoVenta")
@@ -220,19 +250,19 @@ public class VenderDataBinding {
                         textInputLayoutTipoNegocioIT.setVisibility(View.GONE);
                         textInputLayoutTipoNegocioDDL.setVisibility(View.VISIBLE);
                         textInputLayoutTipoNegocioDDL.setHint("Cual es tu negocio?");
-                        btnAddFoto.setVisibility(View.GONE);
+                        btnGuardar.setVisibility(View.GONE);
                         break;
                     case "Personal":
                         textInputLayoutTipoNegocioIT.setVisibility(View.VISIBLE);
                         textInputLayoutTipoNegocioIT.setHint("Que vendo?");
                         textInputLayoutTipoNegocioDDL.setVisibility(View.GONE);
-                        btnAddFoto.setVisibility(View.VISIBLE);
+                        btnGuardar.setVisibility(View.VISIBLE);
                         break;
                     default:
                         Toast.makeText(context, "Default", Toast.LENGTH_SHORT).show();
                         textInputLayoutTipoNegocioIT.setVisibility(View.GONE);
                         textInputLayoutTipoNegocioDDL.setVisibility(View.GONE);
-                        btnAddFoto.setVisibility(View.GONE);
+                        btnGuardar.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -242,12 +272,30 @@ public class VenderDataBinding {
     @BindingAdapter("android:autoCompleteTipoNegocio")
     public static void autoCompleteTipoNegocio(final AutoCompleteTextView autoCompleteTextView, String text){
         cargaDatosTipoNegocio(autoCompleteTextView);
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                btnGuardar.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @BindingAdapter("android:btnGuardar")
+    public static void btnGuardar(final Button button, String text){
+        btnGuardar = button;
+        button.setVisibility(View.GONE);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @BindingAdapter("android:botonAddFoto")
     public static void botonAddFoto(final Button button, String text){
         button.setVisibility(View.GONE);
-        btnAddFoto = button;
+        btnGuardar = button;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -22,5 +22,5 @@ public interface TipoServicioDao {
     @Query("DELETE FROM tipoServicio_tabla")
     void deleteAllTipoServicio();
     @Query("SELECT * FROM tipoServicio_tabla ORDER BY tipoServicio ASC")
-    LiveData<List<TipoServicio>> selectAllTiposServicios();
+    LiveData<List<TipoServicio>> getAllTiposServicios();
 }

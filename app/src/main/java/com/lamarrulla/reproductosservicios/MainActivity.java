@@ -10,6 +10,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -100,7 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 firebaseFacebook.setmAuth(mAuth);
                 firebaseFacebook.setContext(context);
                 firebaseFacebook.setToken(accessToken);
-                firebaseFacebook.handleFacebookAccessToken();
+                if(!firebaseFacebook.handleFacebookAccessToken()){
+                    LoginManager.getInstance().logOut();
+                }
+
             }
 
             @Override
