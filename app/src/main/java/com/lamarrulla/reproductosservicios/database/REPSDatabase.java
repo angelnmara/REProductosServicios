@@ -15,13 +15,14 @@ import com.lamarrulla.reproductosservicios.dao.TipoServicioDao;
 import com.lamarrulla.reproductosservicios.dao.TipoNegocioDao;
 import com.lamarrulla.reproductosservicios.dao.TipoVentaDao;
 import com.lamarrulla.reproductosservicios.dao.UserDao;
-import com.lamarrulla.reproductosservicios.dao.UserTipoNSV;
+import com.lamarrulla.reproductosservicios.dao.UserTipoNSVDao;
 import com.lamarrulla.reproductosservicios.entity.Actividad;
 import com.lamarrulla.reproductosservicios.entity.FragmentMenu;
 import com.lamarrulla.reproductosservicios.entity.TipoNegocio;
 import com.lamarrulla.reproductosservicios.entity.TipoServicio;
 import com.lamarrulla.reproductosservicios.entity.TipoVenta;
 import com.lamarrulla.reproductosservicios.entity.User;
+import com.lamarrulla.reproductosservicios.entity.UserTipoNSV;
 
 @Database(entities = {User.class, Actividad.class, TipoServicio.class, TipoNegocio.class, TipoVenta.class, FragmentMenu.class, UserTipoNSV.class}, version = 4, exportSchema = false)
 public abstract class REPSDatabase extends RoomDatabase {
@@ -32,7 +33,7 @@ public abstract class REPSDatabase extends RoomDatabase {
     public abstract TipoNegocioDao tipoNegocioDao();
     public abstract TipoVentaDao tipoVentaDao();
     public abstract FragmentMenuDao fragmentMenuDao();
-    public abstract UserTipoNSV userTipoNSVDao();
+    public abstract UserTipoNSVDao userTipoNSVDao();
 
     public static synchronized REPSDatabase getInstance(Context context){
         if(instance==null){
@@ -59,7 +60,7 @@ public abstract class REPSDatabase extends RoomDatabase {
         private TipoNegocioDao tipoNegocioDao;
         private TipoVentaDao tipoVentaDao;
         private FragmentMenuDao fragmentMenuDao;
-        private UserTipoNSV userTipoNSVDao;
+        private UserTipoNSVDao userTipoNSVDao;
 
         private PopulateDbAsyncTask(REPSDatabase db){
             actividadDao = db.actividadDao();

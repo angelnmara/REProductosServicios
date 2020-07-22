@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey;
 
 import lombok.Data;
 
-@Data
 @Entity(tableName = "userTipoNSV_table")
 public class UserTipoNSV {
     @PrimaryKey(autoGenerate = true)
@@ -27,4 +26,43 @@ public class UserTipoNSV {
         this.tipoVenta = tipoVenta;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTipoNegocio() {
+        return tipoNegocio;
+    }
+
+    public void setTipoNegocio(String tipoNegocio) {
+        this.tipoNegocio = tipoNegocio;
+    }
+
+    public String getTipoServicio() {
+        return tipoServicio;
+    }
+
+    public void setTipoServicio(String tipoServicio) {
+        this.tipoServicio = tipoServicio;
+    }
+
+    public String getTipoVenta() {
+        return tipoVenta;
+    }
+
+    public void setTipoVenta(String tipoVenta) {
+        this.tipoVenta = tipoVenta;
+    }
 }
